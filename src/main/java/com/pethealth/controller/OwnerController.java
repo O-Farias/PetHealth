@@ -1,7 +1,7 @@
 package com.pethealth.controller;
 
 import com.pethealth.model.Owner;
-import com.pethealth.repository.OwnerRepository;
+import com.pethealth.service.OwnerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,55 +11,42 @@ import java.util.List;
 @RequestMapping("/api/owners")
 public class OwnerController {
 
-    private final OwnerRepository ownerRepository;
+    private final OwnerService ownerService;
 
-    public OwnerController(OwnerRepository ownerRepository) {
-        this.ownerRepository = ownerRepository;
+    public OwnerController(OwnerService ownerService) {
+        this.ownerService = ownerService;
     }
 
-    // Listar todos os tutores
     @GetMapping
     public List<Owner> getAllOwners() {
-        return ownerRepository.findAll();
+        return ownerService.getAllOwners();
     }
 
-    // Buscar tutor por ID
     @GetMapping("/{id}")
     public ResponseEntity<Owner> getOwnerById(@PathVariable Long id) {
-        return ownerRepository.findById(id)
+        return ownerService.getOwnerById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Criar novo tutor
     @PostMapping
     public ResponseEntity<Owner> createOwner(@RequestBody Owner owner) {
-        Owner savedOwner = ownerRepository.save(owner);
+        Owner savedOwner = ownerService.createOwner(owner);
         return ResponseEntity.ok(savedOwner);
     }
 
-    // Atualizar tutor
     @PutMapping("/{id}")
     public ResponseEntity<Owner> updateOwner(@PathVariable Long id, @RequestBody Owner updatedOwner) {
-        return ownerRepository.findById(id)
-                .map(owner -> {
-                    owner.setName(updatedOwner.getName());
-                    owner.setEmail(updatedOwner.getEmail());
-                    owner.setPhone(updatedOwner.getPhone());
-                    Owner savedOwner = ownerRepository.save(owner);
-                    return ResponseEntity.ok(savedOwner);
-                })
+        return ownerService.updateOwner(id, updatedOwner)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Deletar tutor
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOwner(@PathVariable Long id) {
-        return ownerRepository.findById(id)
-                .map(owner -> {
-                    ownerRepository.delete(owner);
-                    return ResponseEntity.noContent().<Void>build(); 
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (ownerService.deleteOwner(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
