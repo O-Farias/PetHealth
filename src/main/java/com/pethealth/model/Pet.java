@@ -23,11 +23,11 @@ public class Pet {
     @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
-    
+    // Construtor padrão
     public Pet() {
     }
 
-    
+    // Construtor completo
     public Pet(Long id, String name, String species, String breed, int age, Owner owner) {
         this.id = id;
         this.name = name;
@@ -37,12 +37,20 @@ public class Pet {
         this.owner = owner;
     }
 
-    
+    // Construtor sem o campo "owner"
     public Pet(Long id, String name, String species, String breed, int age) {
         this.id = id;
         this.name = name;
         this.species = species;
         this.breed = breed;
+        this.age = age;
+    }
+
+    // Construtor adicionado para facilitar os testes
+    public Pet(Long id, String name, String species, int age) {
+        this.id = id;
+        this.name = name;
+        this.species = species;
         this.age = age;
     }
 
