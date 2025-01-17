@@ -1,7 +1,9 @@
 package com.pethealth.model;
 
-import jakarta.persistence.*;
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Owner {
@@ -9,17 +11,21 @@ public class Owner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false, unique = true)
     private String email;
+    private String phone; 
 
-    private String phone;
+    
+    public Owner() {
+    }
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Pet> pets;
+    
+    public Owner(Long id, String name, String email, String phone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
 
     // Getters e Setters
     public Long getId() {
@@ -47,18 +53,10 @@ public class Owner {
     }
 
     public String getPhone() {
-        return phone;
+        return phone; 
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public List<Pet> getPets() {
-        return pets;
-    }
-
-    public void setPets(List<Pet> pets) {
-        this.pets = pets;
+        this.phone = phone; 
     }
 }
